@@ -2,7 +2,11 @@ module web_server
 
 go 1.21.8
 
-require github.com/spf13/viper v1.18.2
+require (
+	github.com/google/uuid v1.4.0
+	github.com/spf13/viper v1.18.2
+	golang.org/x/crypto v0.16.0
+)
 
 require (
 	github.com/goccy/go-json v0.3.5 // indirect
@@ -12,7 +16,6 @@ require (
 	github.com/lestrrat-go/jwx v1.1.0 // indirect
 	github.com/lestrrat-go/option v1.0.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	golang.org/x/crypto v0.16.0 // indirect
 )
 
 require (
