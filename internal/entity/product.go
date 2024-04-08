@@ -7,11 +7,11 @@ import (
 )
 
 var (
-	ErrIDIsRequired    = errors.New("ID is required")
-	ErrNameRequired    = errors.New("name is required")
-	ErrPriceIsRequired = errors.New("price is required")
-	ErrPriceInvalid    = errors.New("price is invalid")
-	ErrInvalidID       = errors.New("invalid ID")
+	ErrIDIsRequired  = errors.New("ID is required")
+	ErrNameRequired  = errors.New("name is required")
+	ErrPriceRequired = errors.New("price is required")
+	ErrPriceInvalid  = errors.New("price is invalid")
+	ErrInvalidID     = errors.New("invalid ID")
 )
 
 type Product struct {
@@ -45,7 +45,7 @@ func (p *Product) Validate() error {
 		return ErrNameRequired
 	}
 	if p.Price == 0 {
-		return ErrPriceIsRequired
+		return ErrPriceRequired
 	}
 	if p.Price < 0 {
 		return ErrPriceInvalid
