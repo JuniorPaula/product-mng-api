@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"web_server/configs"
+)
 
 func main() {
-	fmt.Println("Hello, World!!!")
+	cfg, _ := configs.LoadConfig(".")
+	fmt.Println(cfg.DBDriver)
 }
