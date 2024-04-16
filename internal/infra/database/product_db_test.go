@@ -110,3 +110,23 @@ func TestUpdateProduct(t *testing.T) {
 	assert.Equal(t, product.Name, productFound.Name)
 	assert.Equal(t, product.Price, productFound.Price)
 }
+
+func TestDeleteProduct(t *testing.T) {
+	db, err := gorm.Open(sqlite.Open("file::memory:"), &gorm.Config{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	db.AutoMigrate(&entity.Product{})
+
+	product, err := entity.NewProduct("Product 1", 10)
+	assert.Nil(t, err)
+	db.Create(product)
+	assert.NoError(t, err)
+
+	productDB := NewProduct(db)
+	err = productDB.Delete(product.ID.String())
+	assert.NoError(t, err)
+
+	_, err = productDB.GetByID(product.ID.String())
+	assert.Error(t, err)
+}
