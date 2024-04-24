@@ -7,6 +7,7 @@ import (
 	"web_server/internal/entity"
 	"web_server/internal/infra/webserver/handlers"
 
+	"github.com/go-chi/chi/v5"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -25,8 +26,11 @@ func main() {
 
 	productHandler := handlers.NewProductHandler(db)
 
-	http.HandleFunc("/products", productHandler.CreateProduct)
+	mux := chi.NewRouter()
+	mux.Post("/products", productHandler.CreateProduct)
 
-	fmt.Print("Server running on port 8000\n")
-	http.ListenAndServe(":8000", nil)
+	fmt.Print("Server running on port :8000\n")
+	http.ListenAndServe(":8000", mux)
 }
+
+// ## nexte class 22..
