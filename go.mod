@@ -3,7 +3,6 @@ module web_server
 go 1.21.8
 
 require (
-	github.com/goccy/go-json v0.3.5
 	github.com/google/uuid v1.4.0
 	github.com/spf13/viper v1.18.2
 	github.com/stretchr/testify v1.9.0
@@ -14,6 +13,7 @@ require (
 
 require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
+	github.com/goccy/go-json v0.3.5 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/lestrrat-go/backoff/v2 v2.0.7 // indirect
