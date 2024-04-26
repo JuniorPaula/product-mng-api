@@ -93,3 +93,30 @@ func (h *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 }
+
+func (h *ProductHandler) DeleteProduct(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+	if id == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	err := h.ProductDB.Delete(id)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	var paylod struct {
+		Error   bool   `json:"error"`
+		Message string `json:"message"`
+		Data    string `json:"data"`
+	}
+
+	paylod.Error = false
+	paylod.Message = "Produto deletado com sucesso"
+
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(paylod)
+}

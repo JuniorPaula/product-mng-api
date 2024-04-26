@@ -30,6 +30,7 @@ func main() {
 	mux.Post("/products", productHandler.CreateProduct)
 	mux.Get("/products/{id}", productHandler.GetProduct)
 	mux.Put("/products/{id}", productHandler.UpdateProduct)
+	mux.Delete("/products/{id}", productHandler.DeleteProduct)
 
 	fmt.Print("Server running on port :8000\n")
 	http.ListenAndServe(":8000", mux)
