@@ -28,6 +28,7 @@ func main() {
 
 	mux := chi.NewRouter()
 	mux.Post("/products", productHandler.CreateProduct)
+	mux.Get("/products", productHandler.GetProducts)
 	mux.Get("/products/{id}", productHandler.GetProduct)
 	mux.Put("/products/{id}", productHandler.UpdateProduct)
 	mux.Delete("/products/{id}", productHandler.DeleteProduct)
