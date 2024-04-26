@@ -24,7 +24,10 @@ func main() {
 	}
 	db.AutoMigrate(&entity.Product{}, &entity.User{})
 
-	productHandler := handlers.NewProductHandler(db)
+	var (
+		productHandler = handlers.NewProductHandler(db)
+		userHandler    = handlers.NewUserHandler(db)
+	)
 
 	mux := chi.NewRouter()
 	mux.Post("/products", productHandler.CreateProduct)
@@ -32,6 +35,8 @@ func main() {
 	mux.Get("/products/{id}", productHandler.GetProduct)
 	mux.Put("/products/{id}", productHandler.UpdateProduct)
 	mux.Delete("/products/{id}", productHandler.DeleteProduct)
+
+	mux.Post("/users", userHandler.CreateUser)
 
 	fmt.Print("Server running on port :8000\n")
 	http.ListenAndServe(":8000", mux)
