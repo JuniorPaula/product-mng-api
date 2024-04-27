@@ -28,12 +28,14 @@ func main() {
 
 	var (
 		productHandler = handlers.NewProductHandler(db)
-		userHandler    = handlers.NewUserHandler(db, cfg.TokenAuth, cfg.JWTExpiration)
+		userHandler    = handlers.NewUserHandler(db)
 	)
 
 	mux := chi.NewRouter()
 	mux.Use(middleware.Logger)
 	mux.Use(middleware.Recoverer)
+	mux.Use(middleware.WithValue("jwt", cfg.TokenAuth))
+	mux.Use(middleware.WithValue("expires_in", cfg.JWTExpiration))
 
 	mux.Route("/products", func(r chi.Router) {
 		r.Use(jwtauth.Verifier(cfg.TokenAuth))
