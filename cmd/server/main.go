@@ -8,6 +8,7 @@ import (
 	"web_server/internal/infra/webserver/handlers"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/jwtauth"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -30,11 +31,17 @@ func main() {
 	)
 
 	mux := chi.NewRouter()
-	mux.Post("/products", productHandler.CreateProduct)
-	mux.Get("/products", productHandler.GetProducts)
-	mux.Get("/products/{id}", productHandler.GetProduct)
-	mux.Put("/products/{id}", productHandler.UpdateProduct)
-	mux.Delete("/products/{id}", productHandler.DeleteProduct)
+
+	mux.Route("/products", func(r chi.Router) {
+		r.Use(jwtauth.Verifier(cfg.TokenAuth))
+		r.Use(jwtauth.Authenticator)
+
+		r.Post("/", productHandler.CreateProduct)
+		r.Get("/", productHandler.GetProducts)
+		r.Get("/{id}", productHandler.GetProduct)
+		r.Put("/{id}", productHandler.UpdateProduct)
+		r.Delete("/{id}", productHandler.DeleteProduct)
+	})
 
 	mux.Post("/users", userHandler.CreateUser)
 	mux.Post("/users/generate-token", userHandler.GenerateToken)
