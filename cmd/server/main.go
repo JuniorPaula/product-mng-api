@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	_, err := configs.LoadConfig(".")
+	cfg, err := configs.LoadConfig(".")
 	if err != nil {
 		panic(err)
 	}
@@ -26,7 +26,7 @@ func main() {
 
 	var (
 		productHandler = handlers.NewProductHandler(db)
-		userHandler    = handlers.NewUserHandler(db)
+		userHandler    = handlers.NewUserHandler(db, cfg.TokenAuth, cfg.JWTExpiration)
 	)
 
 	mux := chi.NewRouter()
@@ -37,6 +37,7 @@ func main() {
 	mux.Delete("/products/{id}", productHandler.DeleteProduct)
 
 	mux.Post("/users", userHandler.CreateUser)
+	mux.Post("/users/generate-token", userHandler.GenerateToken)
 
 	fmt.Print("Server running on port :8000\n")
 	http.ListenAndServe(":8000", mux)
