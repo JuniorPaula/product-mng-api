@@ -29,6 +29,7 @@ func main() {
 	var (
 		productHandler = handlers.NewProductHandler(db)
 		userHandler    = handlers.NewUserHandler(db)
+		authHandler    = handlers.NewAuthHandler(db)
 	)
 
 	mux := chi.NewRouter()
@@ -36,6 +37,8 @@ func main() {
 	mux.Use(middleware.Recoverer)
 	mux.Use(middleware.WithValue("jwt", cfg.TokenAuth))
 	mux.Use(middleware.WithValue("expires_in", cfg.JWTExpiration))
+
+	mux.Post("/login", authHandler.Login)
 
 	mux.Route("/products", func(r chi.Router) {
 		r.Use(jwtauth.Verifier(cfg.TokenAuth))
@@ -49,7 +52,6 @@ func main() {
 	})
 
 	mux.Post("/users", userHandler.CreateUser)
-	mux.Post("/users/generate-token", userHandler.GenerateToken)
 
 	fmt.Print("Server running on port :8000\n")
 	http.ListenAndServe(":8000", mux)
