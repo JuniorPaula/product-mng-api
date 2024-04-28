@@ -55,10 +55,32 @@ func main() {
 	})
 
 	mux.Route("/users", func(r chi.Router) {
+		r.Use(jwtauth.Verifier(cfg.TokenAuth))
+		r.Use(jwtauth.Authenticator)
+		r.Use(isAdmin)
+
 		r.Post("/", userHandler.CreateUser)
 		r.Get("/", userHandler.GetUsers)
 	})
 
 	fmt.Print("Server running on port :8000\n")
 	http.ListenAndServe(":8000", mux)
+}
+
+// isAdmin is middleware that checks if the user is an admin
+func isAdmin(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_, claims, err := jwtauth.FromContext(r.Context())
+		if err != nil {
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			return
+		}
+
+		if !claims["is_admin"].(bool) {
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
 }

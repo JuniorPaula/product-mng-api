@@ -59,10 +59,11 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	_, token, _ := jwt.Encode(map[string]interface{}{
-		"id":    u.ID,
-		"email": u.Email,
-		"name":  u.Name,
-		"exp":   time.Now().Add(time.Hour * time.Duration(jwtExpireIn)).Unix(),
+		"id":       u.ID,
+		"email":    u.Email,
+		"name":     u.Name,
+		"is_admin": u.Admin,
+		"exp":      time.Now().Add(time.Hour * time.Duration(jwtExpireIn)).Unix(),
 	})
 
 	accessToken := struct {
