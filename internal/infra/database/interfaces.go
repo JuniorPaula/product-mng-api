@@ -6,6 +6,8 @@ type UserInterface interface {
 	Create(user *entity.User) error
 	GetAll() ([]entity.User, error)
 	GetByEmail(email string) (*entity.User, error)
+	GetByID(id string) (*entity.User, error)
+	Update(user *entity.User) error
 }
 
 type ProductInterface interface {

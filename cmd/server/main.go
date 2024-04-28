@@ -61,6 +61,8 @@ func main() {
 
 		r.Post("/", userHandler.CreateUser)
 		r.Get("/", userHandler.GetUsers)
+		r.Get("/{id}", userHandler.GetUser)
+		r.Put("/{id}", userHandler.UpdateUser)
 	})
 
 	fmt.Print("Server running on port :8000\n")

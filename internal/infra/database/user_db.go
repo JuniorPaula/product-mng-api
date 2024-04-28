@@ -31,3 +31,17 @@ func (u *User) GetAll() ([]entity.User, error) {
 	err := u.DB.Find(&users).Error
 	return users, err
 }
+
+func (u *User) GetByID(id string) (*entity.User, error) {
+	var user entity.User
+	err := u.DB.First(&user, "id = ?", id).Error
+	return &user, err
+}
+
+func (u *User) Update(user *entity.User) error {
+	_, err := u.GetByID(user.ID.String())
+	if err != nil {
+		return err
+	}
+	return u.DB.Save(user).Error
+}
