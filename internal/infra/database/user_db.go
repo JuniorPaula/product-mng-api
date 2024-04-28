@@ -25,3 +25,9 @@ func (u *User) GetByEmail(email string) (*entity.User, error) {
 	err := u.DB.Where("email = ?", email).First(&user).Error
 	return &user, err
 }
+
+func (u *User) GetAll() ([]entity.User, error) {
+	var users []entity.User
+	err := u.DB.Find(&users).Error
+	return users, err
+}
