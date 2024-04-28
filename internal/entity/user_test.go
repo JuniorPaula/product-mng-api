@@ -7,7 +7,7 @@ import (
 )
 
 func TestNewUser(t *testing.T) {
-	user, err := NewUser("Jhon Doe", "j@j.com", "123456")
+	user, err := NewUser("Jhon Doe", "j@j.com", "123456", false)
 	assert.Nil(t, err)
 	assert.NotNil(t, user)
 	assert.NotEmpty(t, user.ID)
@@ -17,7 +17,7 @@ func TestNewUser(t *testing.T) {
 }
 
 func TestUser_ValidatePassword(t *testing.T) {
-	user, err := NewUser("Jhon Doe", "j@j.com", "123456")
+	user, err := NewUser("Jhon Doe", "j@j.com", "123456", false)
 	assert.Nil(t, err)
 	assert.True(t, user.ValidatePassword("123456"))
 	assert.False(t, user.ValidatePassword("1234567"))
