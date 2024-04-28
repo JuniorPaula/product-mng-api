@@ -33,7 +33,7 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	u, err := entity.NewUser(input.Name, input.Email, input.Password)
+	u, err := entity.NewUser(input.Name, input.Email, input.Password, input.Admin)
 	if err != nil {
 		paylod.Error = true
 		paylod.Message = "Erro ao criar usuário"
@@ -59,6 +59,27 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	paylod.Message = "Usuário criado com sucesso"
 
 	w.WriteHeader(http.StatusCreated)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(paylod)
+}
+
+func (h *UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
+	users, err := h.UserDB.GetAll()
+	if err != nil {
+		paylod.Error = true
+		paylod.Message = "Erro ao buscar usuários"
+
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(paylod)
+		return
+	}
+
+	paylod.Error = false
+	paylod.Message = "Usuários encontrados"
+	paylod.Data = users
+
+	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(paylod)
 }

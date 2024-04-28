@@ -54,7 +54,10 @@ func main() {
 		r.Delete("/{id}", productHandler.DeleteProduct)
 	})
 
-	mux.Post("/users", userHandler.CreateUser)
+	mux.Route("/users", func(r chi.Router) {
+		r.Post("/", userHandler.CreateUser)
+		r.Get("/", userHandler.GetUsers)
+	})
 
 	fmt.Print("Server running on port :8000\n")
 	http.ListenAndServe(":8000", mux)
