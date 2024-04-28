@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"web_server/configs"
 	"web_server/internal/entity"
+	"web_server/internal/infra/database"
 	"web_server/internal/infra/webserver/handlers"
 
 	"github.com/go-chi/chi/v5"
@@ -27,7 +28,9 @@ func main() {
 	db.AutoMigrate(&entity.Product{}, &entity.User{})
 
 	var (
-		productHandler = handlers.NewProductHandler(db)
+		productDB = database.NewProduct(db)
+
+		productHandler = handlers.NewProductHandler(productDB)
 		userHandler    = handlers.NewUserHandler(db)
 		authHandler    = handlers.NewAuthHandler(db)
 	)

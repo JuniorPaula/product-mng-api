@@ -10,7 +10,6 @@ import (
 	pkg "web_server/pkg/entity"
 
 	"github.com/go-chi/chi/v5"
-	"gorm.io/gorm"
 )
 
 var paylod struct {
@@ -23,9 +22,9 @@ type ProductHandler struct {
 	ProductDB database.ProductInterface
 }
 
-func NewProductHandler(db *gorm.DB) *ProductHandler {
+func NewProductHandler(db database.ProductInterface) *ProductHandler {
 	return &ProductHandler{
-		ProductDB: database.NewProduct(db),
+		ProductDB: db,
 	}
 }
 
