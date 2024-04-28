@@ -8,6 +8,7 @@ import (
 	"web_server/internal/infra/database"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/jwtauth"
 	"gorm.io/gorm"
 )
 
@@ -174,6 +175,65 @@ func (h *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	paylod.Error = false
 	paylod.Message = "Usuário atualizado"
 	paylod.Data = u
+
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(paylod)
+}
+
+func (h *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+	if id == "" {
+		paylod.Error = true
+		paylod.Message = "ID inválido"
+		paylod.Data = nil
+
+		w.WriteHeader(http.StatusBadRequest)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(paylod)
+		return
+	}
+
+	user, err := h.UserDB.GetByID(id)
+	if err != nil {
+		paylod.Error = true
+		paylod.Message = "Usuário não encontrado"
+		paylod.Data = nil
+
+		w.WriteHeader(http.StatusBadRequest)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(paylod)
+		return
+	}
+
+	_, claims, _ := jwtauth.FromContext(r.Context())
+
+	if claims["id"] == user.ID.String() {
+		paylod.Error = true
+		paylod.Message = "Você não pode deletar seu próprio usuário"
+		paylod.Data = nil
+
+		w.WriteHeader(http.StatusForbidden)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(paylod)
+		return
+	}
+
+	err = h.UserDB.Delete(id)
+	if err != nil {
+		paylod.Error = true
+		paylod.Message = "Erro ao deletar usuário"
+		paylod.Data = nil
+
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(paylod)
+		return
+	}
+
+	paylod.Error = false
+	paylod.Message = "Usuário deletado"
+	paylod.Data = nil
 
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")

@@ -63,6 +63,7 @@ func main() {
 		r.Get("/", userHandler.GetUsers)
 		r.Get("/{id}", userHandler.GetUser)
 		r.Put("/{id}", userHandler.UpdateUser)
+		r.Delete("/{id}", userHandler.DeleteUser)
 	})
 
 	fmt.Print("Server running on port :8000\n")

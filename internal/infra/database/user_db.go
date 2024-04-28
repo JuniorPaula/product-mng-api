@@ -45,3 +45,7 @@ func (u *User) Update(user *entity.User) error {
 	}
 	return u.DB.Save(user).Error
 }
+
+func (u *User) Delete(id string) error {
+	return u.DB.Delete(&entity.User{}, "id = ?", id).Error
+}
