@@ -4,6 +4,7 @@ go 1.21.8
 
 require (
 	github.com/go-chi/chi/v5 v5.0.12
+	github.com/golang/mock v1.6.0
 	github.com/google/uuid v1.4.0
 	github.com/spf13/viper v1.18.2
 	github.com/stretchr/testify v1.9.0
