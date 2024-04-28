@@ -9,6 +9,7 @@ type CreateUserInput struct {
 	Name     string `json:"name"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
+	Admin    bool   `json:"is_admin"`
 }
 
 type JWTInput struct {
