@@ -66,15 +66,21 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 		"exp":      time.Now().Add(time.Hour * time.Duration(jwtExpireIn)).Unix(),
 	})
 
-	accessToken := struct {
+	data := struct {
+		ID          string `json:"id"`
+		Name        string `json:"name"`
+		IsAdmin     bool   `json:"is_admin"`
 		AccessToken string `json:"access_token"`
 	}{
+		ID:          u.ID.String(),
+		Name:        u.Name,
+		IsAdmin:     u.Admin,
 		AccessToken: token,
 	}
 
 	paylod.Error = false
 	paylod.Message = "Login realizado com sucesso"
-	paylod.Data = accessToken
+	paylod.Data = data
 
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
