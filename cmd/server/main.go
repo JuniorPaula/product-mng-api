@@ -53,6 +53,7 @@ func main() {
 	mux.Use(middleware.WithValue("expires_in", cfg.JWTExpiration))
 
 	mux.Post("/login", authHandler.Login)
+	mux.Post("/verify-token", authHandler.VerifyToken)
 
 	mux.Route("/products", func(r chi.Router) {
 		r.Use(jwtauth.Verifier(cfg.TokenAuth))

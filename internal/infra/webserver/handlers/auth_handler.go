@@ -86,3 +86,64 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(paylod)
 }
+
+func (h *AuthHandler) VerifyToken(w http.ResponseWriter, r *http.Request) {
+	jwt := r.Context().Value("jwt").(*jwtauth.JWTAuth)
+
+	var body struct {
+		Token string `json:"token"`
+	}
+	err := json.NewDecoder(r.Body).Decode(&body)
+	if err != nil {
+		paylod.Error = true
+		paylod.Message = "Erro ao decodificar o corpo da requisição"
+		paylod.Data = nil
+
+		w.WriteHeader(http.StatusBadRequest)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(paylod)
+		return
+	}
+
+	token, err := jwtauth.VerifyToken(jwt, body.Token)
+	if err != nil {
+		paylod.Error = true
+		paylod.Message = "Token inválido"
+		paylod.Data = nil
+
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(paylod)
+		return
+	}
+
+	if token == nil {
+		paylod.Error = true
+		paylod.Message = "Token inválido"
+		paylod.Data = nil
+
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(paylod)
+		return
+	}
+
+	if token.Expiration().Before(time.Now()) {
+		paylod.Error = true
+		paylod.Message = "Token expirado"
+		paylod.Data = nil
+
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(paylod)
+		return
+	}
+
+	paylod.Error = false
+	paylod.Message = "Token válido"
+	paylod.Data = nil
+
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(paylod)
+}
