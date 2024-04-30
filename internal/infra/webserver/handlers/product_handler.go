@@ -109,6 +109,7 @@ func (h *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	if id == "" {
 		paylod.Error = true
 		paylod.Message = "ID inválido"
+		paylod.Data = nil
 
 		w.WriteHeader(http.StatusBadRequest)
 		w.Header().Set("Content-Type", "application/json")
@@ -121,6 +122,7 @@ func (h *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		paylod.Error = true
 		paylod.Message = "Erro ao decodificar o corpo da requisição"
+		paylod.Data = nil
 
 		w.WriteHeader(http.StatusBadRequest)
 		w.Header().Set("Content-Type", "application/json")
@@ -132,6 +134,7 @@ func (h *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		paylod.Error = true
 		paylod.Message = "ID inválido"
+		paylod.Data = nil
 
 		w.WriteHeader(http.StatusBadRequest)
 		w.Header().Set("Content-Type", "application/json")
@@ -142,8 +145,9 @@ func (h *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	err = h.ProductDB.Update(&product)
 	if err != nil {
 		paylod.Error = true
-
 		paylod.Message = "Erro ao atualizar produto"
+		paylod.Data = nil
+
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(paylod)
@@ -152,6 +156,7 @@ func (h *ProductHandler) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 
 	paylod.Error = false
 	paylod.Message = "Produto atualizado com sucesso"
+	paylod.Data = product
 
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
