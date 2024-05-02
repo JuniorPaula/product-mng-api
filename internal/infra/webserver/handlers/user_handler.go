@@ -123,6 +123,7 @@ func (h *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	if id == "" {
 		paylod.Error = true
 		paylod.Message = "ID inválido"
+		paylod.Data = nil
 
 		w.WriteHeader(http.StatusBadRequest)
 		w.Header().Set("Content-Type", "application/json")
@@ -135,6 +136,7 @@ func (h *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		paylod.Error = true
 		paylod.Message = "Erro ao decodificar o corpo da requisição"
+		paylod.Data = nil
 
 		w.WriteHeader(http.StatusBadRequest)
 		w.Header().Set("Content-Type", "application/json")
@@ -146,11 +148,28 @@ func (h *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		paylod.Error = true
 		paylod.Message = "Usuário não encontrado"
+		paylod.Data = nil
 
 		w.WriteHeader(http.StatusNotFound)
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(paylod)
 		return
+	}
+
+	// verify if the user wannas change the password
+	if input.Password != "" {
+		hash, err := u.GeneratePasswordHash(input.Password)
+		if err != nil {
+			paylod.Error = true
+			paylod.Message = "Erro ao gerar hash da senha"
+			paylod.Data = nil
+
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(paylod)
+			return
+		}
+		u.Password = hash
 	}
 
 	if input.Name != "" {
@@ -165,6 +184,7 @@ func (h *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		paylod.Error = true
 		paylod.Message = "Erro ao atualizar usuário"
+		paylod.Data = nil
 
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Header().Set("Content-Type", "application/json")

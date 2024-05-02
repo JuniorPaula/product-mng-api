@@ -13,9 +13,10 @@ type CreateUserInput struct {
 }
 
 type UpdateUserInput struct {
-	Name  string `json:"name"`
-	Email string `json:"email"`
-	Admin bool   `json:"is_admin"`
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Admin    bool   `json:"is_admin"`
 }
 
 type JWTInput struct {

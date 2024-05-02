@@ -30,6 +30,7 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		paylod.Error = true
 		paylod.Message = "Erro ao decodificar o corpo da requisição"
+		paylod.Data = nil
 
 		w.WriteHeader(http.StatusBadRequest)
 		w.Header().Set("Content-Type", "application/json")
@@ -41,6 +42,7 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		paylod.Error = true
 		paylod.Message = "Credenciais inválidas"
+		paylod.Data = nil
 
 		w.WriteHeader(http.StatusUnauthorized)
 		w.Header().Set("Content-Type", "application/json")
@@ -51,6 +53,7 @@ func (h *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
 	if !u.ValidatePassword(user.Password) {
 		paylod.Error = true
 		paylod.Message = "Credenciais inválidas"
+		paylod.Data = nil
 
 		w.WriteHeader(http.StatusUnauthorized)
 		w.Header().Set("Content-Type", "application/json")
