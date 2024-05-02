@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"web_server/configs"
@@ -88,14 +89,28 @@ func main() {
 // isAdmin is middleware that checks if the user is an admin
 func isAdmin(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var paylod struct {
+			Error   bool   `json:"error"`
+			Message string `json:"message"`
+		}
 		_, claims, err := jwtauth.FromContext(r.Context())
 		if err != nil {
-			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			paylod.Error = true
+			paylod.Message = "Erro ao verificar token"
+
+			w.WriteHeader(http.StatusUnauthorized)
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(paylod)
 			return
 		}
 
 		if !claims["is_admin"].(bool) {
-			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
+			paylod.Error = true
+			paylod.Message = "Você não tem permissão para acessar este recurso"
+
+			w.WriteHeader(http.StatusUnauthorized)
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(paylod)
 			return
 		}
 
