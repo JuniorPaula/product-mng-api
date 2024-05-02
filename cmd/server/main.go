@@ -54,6 +54,9 @@ func main() {
 
 	mux.Post("/login", authHandler.Login)
 	mux.Post("/verify-token", authHandler.VerifyToken)
+	
+	mux.Get("/users/{id}/me", userHandler.GetUser)
+	mux.Put("/users/{id}/me", userHandler.UpdateUser)
 
 	mux.Route("/products", func(r chi.Router) {
 		r.Use(jwtauth.Verifier(cfg.TokenAuth))
